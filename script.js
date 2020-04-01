@@ -4,6 +4,8 @@ let rootStyle = getComputedStyle(root);
 let body = document.querySelector('body');
 let start_button = document.querySelector('#start');
 let save_button = document.querySelector('#save');
+body.append(init_filed_size_options());
+let menu_options = document.querySelector('.menu-options');
 let steps = document.getElementById('steps');
 let steps_count = 0;
 let min_el = document.getElementById('m');
@@ -18,23 +20,23 @@ let empty = null;
 let save_options = {};
 
 // RESPONSIVE
-let width = (body.offsetWidth - 2) / 4 - 2;
+let width = (body.offsetWidth - 2) / field_size - 2;
 root.style.setProperty('--size', width + 'px');
 // console.log(rootStyle.getPropertyValue('--size'));
+
+window.addEventListener('resize', () => {
+    let width = (body.offsetWidth - 2) / field_size - 2;
+    root.style.setProperty('--size', width + 'px');
+});
 
 // LOAD STATE
 if (localStorage.getItem('save_options')) {
     save_options = JSON.parse(localStorage.getItem('save_options'));
     start_game(save_options.field_size, save_options.saved_numbers);
-    timer(save_options.sec, save_options.min);
+    field_size = save_options.field_size
     steps_count = save_options.steps_count;
     steps.textContent = steps_count;
 }
-
-// START GAME
-start_button.addEventListener('click', () => {
-    start_game(field_size)
-});
 
 // SAVE STATE
 save_button.addEventListener('click', (e) => {
@@ -45,15 +47,17 @@ save_button.addEventListener('click', (e) => {
     localStorage.setItem('save_options', JSON.stringify(save_state(steps_count, min, sec, current_result, field_size)));
 });
 
-// RESIZE
-window.addEventListener('resize', () => {
-    let width = (body.offsetWidth - 2) / 4 - 2;
-    root.style.setProperty('--size', width + 'px');
+// START GAME
+start_button.addEventListener('click', () => {
+    steps_count = 0;
+    steps.textContent = 0;
+    start_game(field_size)
 });
 
-// [0, 2, 4, 3, 1, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15]
-// START GAME
 function start_game(field_size, save_numbers=null) {
+    let width = (body.offsetWidth - 2) / field_size - 2;
+    root.style.setProperty('--size', width + 'px');
+
     if (field) field.remove();
     let init_field = document.createElement('div');
     init_field.classList.add('field-wrapper4x4');
@@ -62,13 +66,20 @@ function start_game(field_size, save_numbers=null) {
     let numbers = null;
     if (save_numbers) {
         numbers = save_numbers;
+        timer(save_options.sec, save_options.min);
     } else {
         numbers = Array.from({length: field_size * field_size}, (v,k) => k)
             .sort(() => Math.random() - 0.5);
+        timer();
     }
     numbers.forEach((value, i) => {
         let item = document.createElement('div');
-        item.textContent = value ? value : '';
+        if (!value) {
+            item.classList.add('empty');
+            item.textContent = '';
+        } else {
+            item.textContent = value;
+        }
         item.classList.add('item');
         item.setAttribute('id', i + 1);
         field.append(item)
@@ -76,7 +87,6 @@ function start_game(field_size, save_numbers=null) {
     field_items = document.querySelectorAll('.item');
 
     field.addEventListener('click', game_watcher);
-    timer()
 }
 
 function game_watcher(e) {
@@ -87,9 +97,7 @@ function game_watcher(e) {
     let empty_position = empty_element.getAttribute('id');
 
     if (e.target.closest('.item')) {
-        // console.log(current_element);
-        // console.log(current_position, '--- CURRENT POSSITION');
-        if (is_allowed_move(current_position, empty_position, steps_4x4)) {
+        if (is_allowed_move(current_position, empty_position, step_option[field_size])) {
             steps_count++;
             steps.textContent = steps_count;
 
@@ -99,12 +107,16 @@ function game_watcher(e) {
             field_items = document.querySelectorAll('.item');
             current_result = [...field_items].map(el => +el.textContent).filter(el => el);
             check_result(current_result);
-        } else console.log('NOOOOOOOO')
+        } else {
+            e.target.classList.add('shake');
+            setTimeout(() => e.target.classList.remove('shake'), 1000);
+            console.log('NOOOOOOOO')
+        }
     }
 }
 
 function is_allowed_move(current, empty, steps) {
-    return steps[current].includes(+empty)
+    return steps[current].includes(empty)
 }
 
 function move(current, empty) {
@@ -120,9 +132,6 @@ function move(current, empty) {
 
 function check_result(result) {
     let win = result.slice().sort((a, b) => a - b).join('');
-    // console.log(result);
-    // console.log(win);
-    // console.log(result.join('') === win);
     return result.join('') === win
 }
 
@@ -149,4 +158,31 @@ function save_state(steps_count, min, sec, saved_numbers, field_size) {
     save_options['saved_numbers'] = saved_numbers;
     save_options['field_size'] = field_size;
     return save_options
+}
+
+// FIELD SELECTION
+
+menu_options.addEventListener('click', select_size);
+
+function select_size(e) {
+    if (e.target.tagName === 'LI') {
+        let size = +e.target.dataset['size'];
+        field_size = size;
+        start_game(size);
+        steps_count = 0;
+    }
+}
+
+function init_filed_size_options() {
+    field_size_options = [3, 4, 5, 6, 7, 8];
+    let ul = document.createElement('ul');
+    ul.classList.add('menu-options');
+    field_size_options.forEach(el => {
+        let li = document.createElement('li');
+        li.classList.add('menu-option');
+        li.textContent = `${el} x ${el}`;
+        li.setAttribute('data-size', el);
+        ul.append(li)
+    });
+    return ul
 }
