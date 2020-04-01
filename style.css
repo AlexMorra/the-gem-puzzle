@@ -1,0 +1,102 @@
+:root {
+    --size: 0;
+}
+* {
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    margin: 5vh auto 0 auto;
+    width: 100%;
+    max-width: 700px;
+    background: #1D1B26;
+}
+
+.field-wrapper4x4 {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.item {
+    position: relative;
+    margin: 1px;
+    display: table-cell;
+    background-color: lightcyan;
+    height: var(--size);
+    width: var(--size);
+    text-align: center;
+    line-height: var(--size);
+    font-size: calc(var(--size) / 2);
+}
+
+
+.menu {
+    font-family: 'Montserrat', sans-serif;
+}
+
+/* BUTTONS */
+
+.button-container a {
+    text-decoration: none;
+    outline: none;
+    color: white;
+    display: inline-block;
+    position: relative;
+    padding: 10px 20px;
+    border: 1px solid;
+    border-image: linear-gradient(180deg, #ff3000, #ed0200, #ff096c, #d50082);
+    border-image-slice: 1;
+    margin: 10px 10px;
+    text-transform: uppercase;
+    overflow: hidden;
+    letter-spacing: 2px;
+    transition: .8s cubic-bezier(.165,.84,.44,1);
+}
+.button-container a:before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 0;
+    height: 0;
+    width: 100%;
+    z-index: -1;
+    color: white;
+    background: linear-gradient(180deg, #ff3000, #ed0200, #ff096c, #d50082);
+    transition: .8s cubic-bezier(.165,.84,.44,1);
+}
+a:hover {background: rgba(255,255,255,0);}
+a:hover:before {
+    bottom: 0%;
+    top: auto;
+    height: 100%;
+}
+
+a:active {
+    transform: scale(0.9);
+}
+
+.game-state {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.steps,
+.time{
+    font-size: 18px;
+    text-transform: uppercase;
+    background: linear-gradient(180deg, #ff3000, #ed0200, #ff096c, #d50082);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.steps {
+    margin-right: 15px;
+}
+
+
+@media  (max-width : 695px) {
+    .button-container {
+        text-align: center;
+    }
+}
