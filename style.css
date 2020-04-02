@@ -1,5 +1,6 @@
 :root {
     --size: 0;
+    --pos_x: 0;
 }
 * {
     margin: 0;
@@ -11,17 +12,19 @@ body {
     width: 100%;
     max-width: 700px;
     background: #1D1B26;
+    font-family: 'Montserrat', sans-serif;
 }
 
 .field-wrapper4x4 {
-    display: flex;
-    flex-wrap: wrap;
+    position: absolute;
+    max-width: 700px;
+    width: 100%;
 }
 
 .item {
     position: relative;
     margin: 1px;
-    display: table-cell;
+    display: inline-block;
     background-color: lightcyan;
     height: var(--size);
     width: var(--size);
@@ -30,13 +33,14 @@ body {
     font-size: calc(var(--size) / 2);
 }
 
-.empty {
-    background-color: #b0cece;
+.test {
+    left: var(--pos_x);
+    transition: all 1s ease;
 }
 
-
-.menu {
-    font-family: 'Montserrat', sans-serif;
+.empty {
+    color: #b0cece;
+    background-color: #b0cece;
 }
 
 /* BUTTONS */
@@ -119,9 +123,7 @@ a:active {
 }
 
 @keyframes shake {
-    0% { transform: translate(1px, 1px) rotate(0deg);
-        background-color: #494e62;
-    }
+    0% { transform: translate(1px, 1px) rotate(0deg);}
     10% { transform: translate(-1px, -2px) rotate(-1deg); }
     20% { transform: translate(-3px, 0px) rotate(1deg); }
     30% { transform: translate(3px, 2px) rotate(0deg); }

@@ -76,7 +76,7 @@ function start_game(field_size, save_numbers=null) {
         let item = document.createElement('div');
         if (!value) {
             item.classList.add('empty');
-            item.textContent = '';
+            item.textContent = value;
         } else {
             item.textContent = value;
         }
@@ -93,7 +93,7 @@ function game_watcher(e) {
 
     let current_element = e.target;
     let current_position = current_element.getAttribute('id');
-    let empty_element = [...field_items].filter(el => !el.textContent)[0];
+    let empty_element = [...field_items].filter(el => !+el.textContent)[0];
     let empty_position = empty_element.getAttribute('id');
 
     if (e.target.closest('.item')) {
@@ -103,10 +103,39 @@ function game_watcher(e) {
 
             console.log('MOOOOVE');
 
-            move(current_element, empty_element);
-            field_items = document.querySelectorAll('.item');
-            current_result = [...field_items].map(el => +el.textContent).filter(el => el);
-            check_result(current_result);
+            let current_position = current_element.getBoundingClientRect();
+            let empty_position = empty_element.getBoundingClientRect();
+
+            current_element.style.left = 0;
+            current_element.style.top = 0;
+            empty_element.style.left = 0;
+            empty_element.style.top = 0;
+
+            // ?????
+            empty_element.classList.remove('shake');
+
+            setTimeout(() => {
+                current_element.style.zIndex = 1;
+                current_element.style.transition = 'all 0.5s ease';
+                empty_element.style.transition = 'all 0.5s ease';
+                current_element.style.left = empty_position.x - current_position.x + 'px';
+                current_element.style.top = empty_position.y - current_position.y + 'px';
+                empty_element.style.left = current_position.x - empty_position.x+ 'px';
+                empty_element.style.top = current_position.y - empty_position.y+ 'px';
+            },);
+
+            setTimeout(() => {
+                current_element.removeAttribute('style')
+                empty_element.removeAttribute('style')
+                move(current_element, empty_element);
+                field_items = document.querySelectorAll('.item');
+                current_result = [...field_items].map(el => +el.textContent).filter(el => el);
+
+                if (check_result(current_result)) {
+                    alert('- - - W I N - - -');
+                    field.remove();
+                }
+            },500);
         } else {
             e.target.classList.add('shake');
             setTimeout(() => e.target.classList.remove('shake'), 1000);
@@ -116,6 +145,8 @@ function game_watcher(e) {
 }
 
 function is_allowed_move(current, empty, steps) {
+    console.log(current)
+    console.log(empty)
     return steps[current].includes(empty)
 }
 
