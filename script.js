@@ -101,8 +101,6 @@ function game_watcher(e) {
             steps_count++;
             steps.textContent = steps_count;
 
-            console.log('MOOOOVE');
-
             let current_position = current_element.getBoundingClientRect();
             let empty_position = empty_element.getBoundingClientRect();
 
@@ -111,13 +109,10 @@ function game_watcher(e) {
             empty_element.style.left = 0;
             empty_element.style.top = 0;
 
-            // ?????
-            empty_element.classList.remove('shake');
-
             setTimeout(() => {
                 current_element.style.zIndex = 1;
-                current_element.style.transition = 'all 0.5s ease';
-                empty_element.style.transition = 'all 0.5s ease';
+                current_element.style.transition = 'all 0.3s ease';
+                empty_element.style.transition = 'all 0.3s ease';
                 current_element.style.left = empty_position.x - current_position.x + 'px';
                 current_element.style.top = empty_position.y - current_position.y + 'px';
                 empty_element.style.left = current_position.x - empty_position.x+ 'px';
@@ -132,21 +127,23 @@ function game_watcher(e) {
                 current_result = [...field_items].map(el => +el.textContent).filter(el => el);
 
                 if (check_result(current_result)) {
-                    alert('- - - W I N - - -');
+                    alert(`«Ура! Вы решили головоломку за ${min}:${sec} и ${steps_count} ходов»`);
                     field.remove();
+                    if (localStorage.getItem('save_options')) {
+                        localStorage.removeItem('save_options')
+                    }
                 }
-            },500);
+            },300);
+            // ?????
+            empty_element.classList.remove('shake');
         } else {
             e.target.classList.add('shake');
             setTimeout(() => e.target.classList.remove('shake'), 1000);
-            console.log('NOOOOOOOO')
         }
     }
 }
 
 function is_allowed_move(current, empty, steps) {
-    console.log(current)
-    console.log(empty)
     return steps[current].includes(empty)
 }
 
