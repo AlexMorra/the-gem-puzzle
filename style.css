@@ -15,7 +15,7 @@ body {
     font-family: 'Montserrat', sans-serif;
 }
 
-.field-wrapper4x4 {
+.field-wrapper {
     position: absolute;
     max-width: 700px;
     width: 100%;
@@ -90,6 +90,46 @@ a:active {
     margin-bottom: 20px;
 }
 
+/* RESULTS */
+
+.results_wrapper {
+    transition: all ease 1s;
+}
+
+.results_select_ul {
+    display: flex;
+    justify-content: space-between;
+    list-style: none;
+}
+
+.result_select_li {
+    text-align: center;
+    width: 100%;
+    color: white;
+    cursor: pointer;
+    padding: 10px 0;
+    background-color: #252331;
+}
+
+.results_table {
+    width: 100%;
+}
+
+.results_table_tr {
+    color: white;
+}
+
+.results_table_td {
+    text-align: center;
+    padding: 10px;
+    border-bottom: 1px solid #ff3000;
+}
+
+
+
+
+/* GAME STATE */
+
 .steps,
 .time{
     font-size: 18px;
@@ -146,4 +186,16 @@ a:active {
     .button-container {
         text-align: center;
     }
+}
+
+.hide {
+    display: none;
+}
+
+.show {
+    opacity: 1;
+}
+
+.active-results {
+    background-color: red;
 }

@@ -212,3 +212,45 @@ const step_option = {
         64: ["56", "63"]
     }
 };
+
+let results_stats = {
+    3 : [
+        {'time': 'example3', 'steps': 1},
+        {'time': '00:10', 'steps': 1},
+        {'time': '00:10', 'steps': 3},
+        {'time': '00:10', 'steps': 4},
+        {'time': '00:10', 'steps': 5},
+    ],
+    4 : [
+        {'time': 'example4', 'steps': 21},
+        {'time': '00:10', 'steps': 22},
+        {'time': '00:10', 'steps': 23},
+        {'time': '00:10', 'steps': 24},
+        {'time': '00:10', 'steps': 25},
+    ],
+    5 : [
+        {'time': 'example5', 'steps': 11},
+        {'time': '00:10', 'steps': 12},
+        {'time': '00:10', 'steps': 13},
+        {'time': '00:10', 'steps': 14},
+        {'time': '00:10', 'steps': 15},
+    ],
+    6 : [
+        {'time': 'example6', 'steps': 1},
+        {'time': '00:10', 'steps': 2},
+        {'time': '00:10', 'steps': 3},
+        {'time': '00:10', 'steps': 4},
+        {'time': '00:18', 'steps': 5},
+    ],
+    7 : [
+        {'time': 'example7', 'steps': 11},
+        {'time': '00:10', 'steps': 303},
+        {'time': '33:11', 'steps': 666},
+    ],
+    8 : [
+        {'time': '00:10', 'steps': 8},
+        {'time': '00:18', 'steps': 22},
+        {'time': '00:10', 'steps': 44},
+        {'time': '00:12', 'steps': 303},
+    ],
+};

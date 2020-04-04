@@ -4,6 +4,7 @@ let rootStyle = getComputedStyle(root);
 let body = document.querySelector('body');
 let start_button = document.querySelector('#start');
 let save_button = document.querySelector('#save');
+let results_button = document.querySelector('#results');
 body.append(init_filed_size_options());
 let menu_options = document.querySelector('.menu-options');
 let steps = document.getElementById('steps');
@@ -36,6 +37,10 @@ if (localStorage.getItem('save_options')) {
     field_size = save_options.field_size
     steps_count = save_options.steps_count;
     steps.textContent = steps_count;
+} else init_start()
+
+if (localStorage.getItem('results_stats')) {
+    results_stats = JSON.parse(localStorage.getItem('results_stats'));
 }
 
 // SAVE STATE
@@ -48,21 +53,24 @@ save_button.addEventListener('click', (e) => {
 });
 
 // START GAME
-start_button.addEventListener('click', () => {
+start_button.addEventListener('click', init_start);
+
+function init_start() {
     steps_count = 0;
     steps.textContent = 0;
     start_game(field_size)
-});
+}
 
 function start_game(field_size, save_numbers=null) {
+
     let width = (body.offsetWidth - 2) / field_size - 2;
     root.style.setProperty('--size', width + 'px');
 
     if (field) field.remove();
     let init_field = document.createElement('div');
-    init_field.classList.add('field-wrapper4x4');
+    init_field.classList.add('field-wrapper');
     body.append(init_field);
-    field = document.querySelector('.field-wrapper4x4');
+    field = document.querySelector('.field-wrapper');
     let numbers = null;
     if (save_numbers) {
         numbers = save_numbers;
@@ -132,6 +140,7 @@ function game_watcher(e) {
                     if (localStorage.getItem('save_options')) {
                         localStorage.removeItem('save_options')
                     }
+                    save_result_to_table(min, sec, steps_count, field_size)
                 }
             },300);
             // ?????
@@ -179,13 +188,24 @@ function timer(seconds=1,minutes=0) {
 }
 
 function save_state(steps_count, min, sec, saved_numbers, field_size) {
-    console.log(steps_count, min, sec, saved_numbers, field_size);
     save_options['steps_count'] = steps_count;
     save_options['min'] = min;
     save_options['sec'] = sec;
     save_options['saved_numbers'] = saved_numbers;
     save_options['field_size'] = field_size;
     return save_options
+}
+
+function save_result_to_table(min, sec, steps, field_size) {
+    let save_result = {
+        'time': `${min}:${sec}`,
+        'steps': steps
+    };
+    results_stats[field_size].push(save_result);
+    results_stats[field_size].sort((prev, next) => prev['steps'] - next['steps']);
+    if (results_stats[field_size].length > 10) results_stats[field_size].splice(9, 1);
+
+    localStorage.setItem('results_stats', JSON.stringify(results_stats));
 }
 
 // FIELD SELECTION
@@ -213,4 +233,89 @@ function init_filed_size_options() {
         ul.append(li)
     });
     return ul
+}
+
+
+// RESULTS
+let result_wrapper = document.querySelector('.results_wrapper');
+let table = 0;
+let active_results = false
+
+results_button.addEventListener('click', (e) => {
+    let init_active_li = document.querySelectorAll('.result_select_li');
+    init_active_li.forEach(el => {
+        if (parseInt(el.textContent) === field_size) {
+            el.classList.add('active-results')
+        } else el.classList.remove('active-results');
+    });
+
+    active_results = active_results ? false : true;
+    if (active_results) {
+        start_button.removeEventListener('click', init_start);
+        result_wrapper.style.opacity = '0';
+        setTimeout(() => {
+            result_wrapper.style.opacity = '1';
+        }, 100);
+    } else {
+        start_button.addEventListener('click', init_start);
+        result_wrapper.removeAttribute('style');
+    }
+
+    let field_wrapper = document.querySelector('.field-wrapper');
+    field_wrapper.classList.toggle('hide');
+    // result_wrapper.classList.toggle('show');
+    menu_options.classList.toggle('hide');
+    result_wrapper.classList.toggle('hide');
+    show_results_table(field_size);
+
+});
+
+let select_results_table = document.querySelector('.results_select_ul');
+select_results_table.addEventListener('click', (e) => {
+    let li = select_results_table.querySelectorAll('.result_select_li');
+    li.forEach(el => el.classList.remove('active-results'));
+    e.target.classList.add('active-results');
+
+    let size = parseInt(e.target.textContent);
+    show_results_table(size);
+});
+
+
+
+function show_results_table(size_table=3) {
+    if (table) table.remove();
+
+    table = document.createElement('table');
+    table.classList.add('results_table');
+    let table_tr_header = document.createElement('tr');
+    table_tr_header.classList.add('results_table_tr');
+    let table_header = ['№', 'Время', 'Ходов'];
+    table_header.forEach(el => {
+        let table_td_header = document.createElement('td');
+        table_td_header.classList.add('results_table_td');
+        table_td_header.textContent = el;
+        table_tr_header.append(table_td_header);
+        table.append(table_tr_header)
+    });
+
+    result_wrapper.append(table);
+
+
+
+    let result_table = document.querySelector('.results_table');
+    results_stats[size_table].forEach((el, i) => {
+        let tr = document.createElement('tr');
+        tr.classList.add('results_table_tr');
+        let td = document.createElement('td');
+        td.classList.add('results_table_td');
+        td.textContent = i + 1;
+        tr.append(td);
+        for (let key in el) {
+            td = document.createElement('td');
+            td.classList.add('results_table_td');
+            td.textContent = el[key];
+            tr.append(td);
+        }
+        result_table.append(tr);
+    });
 }
