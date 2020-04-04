@@ -1,4 +1,5 @@
 # codejam-the-gem-puzzle
+https://alexmorra.github.io/the-gem-puzzle/.
 
 ### Basic scope +30 
 - [x] вёрстка, дизайн, UI: `+10`
