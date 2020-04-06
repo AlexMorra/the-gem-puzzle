@@ -62,6 +62,29 @@ function init_start() {
     start_game(field_size)
 }
 
+// field.onmousedown = function (e) {
+//
+//     if (e.target.closest('.item')) {
+//         let current = e.target;
+//         let current_x = e.clientX;
+//         let current_y = e.clientY;
+//
+//         function onMouseMove(e) {
+//             current.style.zIndex = '1';
+//             current.style.left = e.clientX - current_x + 'px'
+//             current.style.top = e.clientY - current_y + 'px'
+//         }
+//
+//         document.addEventListener('mousemove', onMouseMove);
+//
+//         field.onmouseup = function() {
+//             current.removeAttribute('style');
+//             document.removeEventListener('mousemove', onMouseMove);
+//             field.onmouseup = null;
+//         };
+//     }
+// };
+
 function start_game(field_size, save_numbers=null) {
 
     let width = (body.offsetWidth - 2) / field_size - 2;

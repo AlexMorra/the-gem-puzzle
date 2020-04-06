@@ -144,7 +144,7 @@ a:active {
 }
 
 .menu-options {
-    margin: 15px;
+    margin: 5px;
     list-style: none;
     display: flex;
     flex-wrap: wrap;
@@ -155,7 +155,7 @@ a:active {
 }
 
 .menu-option {
-    margin: 0 10px 5px 10px;
+    margin: 0 5px 5px 5px;
     border: 1px solid #ff096c;
     padding: 0 5px;
     border-radius: 5px;
