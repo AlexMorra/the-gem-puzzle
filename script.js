@@ -19,6 +19,7 @@ let field = null;
 let field_size = 4;
 let empty = null;
 let save_options = {};
+let timer_counter = 0;
 
 // RESPONSIVE
 let width = (body.offsetWidth - 2) / field_size - 2;
@@ -175,7 +176,7 @@ function check_result(result) {
 function timer(seconds=1,minutes=0) {
     sec = seconds;
     min = minutes;
-    setInterval(() => {
+    let interval = setInterval(() => {
         if (sec > 60) {
             sec %= 60;
             min++
@@ -185,6 +186,8 @@ function timer(seconds=1,minutes=0) {
         sec_el.textContent = sec;
         sec++
     }, 1000)
+    timer_counter++;
+    if (timer_counter > 1) clearInterval(interval);
 }
 
 function save_state(steps_count, min, sec, saved_numbers, field_size) {
